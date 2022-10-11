@@ -4070,7 +4070,8 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Acts.SetLayerVisible,
 		C3.Plugins.AJAX.Acts.SetHeader,
 		C3.Plugins.AJAX.Acts.Post,
-		C3.Plugins.System.Exps.urlencode
+		C3.Plugins.System.Exps.urlencode,
+		C3.Plugins.Browser.Acts.GoToURL
 	];
 };
 self.C3_JsPropNameTable = [
