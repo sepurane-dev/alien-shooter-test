@@ -3804,24 +3804,6 @@ lm,0,re,tm),{wrapX:"repeat",sampling,anisotropy});if(bm>0&&re>lm)this._bottomTex
 }
 
 {
-'use strict';{const C3=self.C3;C3.Plugins.LocalStorage=class LocalStoragePlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Plugins.LocalStorage.Type=class LocalStorageType extends C3.SDKTypeBase{constructor(objectClass){super(objectClass)}Release(){super.Release()}OnCreate(){}}}
-{const C3=self.C3;C3.Plugins.LocalStorage.Instance=class LocalStorageInstance extends C3.SDKInstanceBase{constructor(inst,properties){super(inst);this._currentKey="";this._lastValue="";this._keyNamesList=[];this._errorMessage="";this._pendingGets=0;this._pendingSets=0;this._storage=this._runtime._GetProjectStorage();this._debugCache=new Map;this._isLoadingDebugCache=false}Release(){super.Release()}async _TriggerStorageError(err){this._errorMessage=this._GetErrorString(err);await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnError)}_GetErrorString(err){if(!err)return"unknown error";
-else if(typeof err==="string")return err;else if(typeof err.message==="string")return err.message;else if(typeof err.name==="string")return err.name;else if(typeof err.data==="string")return err.data;else return"unknown error"}GetDebuggerProperties(){if(!this._isLoadingDebugCache)this._DebugCacheStorage();return[{title:"plugins.localstorage.name",properties:[...this._debugCache.entries()].map(entry=>({name:"$"+entry[0],value:entry[1],onedit:v=>this._storage.setItem(entry[0],v)}))}]}async _DebugCacheStorage(){this._isLoadingDebugCache=
-true;try{const keyList=await this._storage.keys();keyList.sort((a,b)=>{const la=a.toLowerCase();const lb=b.toLowerCase();if(la<lb)return-1;else if(lb<la)return 1;else return 0});const values=await Promise.all(keyList.map(key=>this._storage.getItem(key)));this._debugCache.clear();for(let i=0,len=keyList.length;i<len;++i)this._debugCache.set(keyList[i],values[i])}catch(err){console.warn("[C3 debugger] Error displaying local storage: ",err)}finally{this._isLoadingDebugCache=false}}}}
-{const C3=self.C3;C3.Plugins.LocalStorage.Cnds={OnItemSet(key){return this._currentKey===key},OnAnyItemSet(){return true},OnItemGet(key){return this._currentKey===key},OnAnyItemGet(){return true},OnItemRemoved(key){return this._currentKey===key},OnAnyItemRemoved(){return true},OnCleared(){return true},OnAllKeyNamesLoaded(){return true},OnError(){return true},OnItemExists(key){return this._currentKey===key},OnItemMissing(key){return this._currentKey===key},CompareKey(cmp,key){return C3.compare(this._currentKey,
-cmp,key)},CompareValue(cmp,v){return C3.compare(this._lastValue,cmp,v)},IsProcessingSets(){return this._pendingSets>0},IsProcessingGets(){return this._pendingGets>0},OnAllSetsComplete(){return true},OnAllGetsComplete(){return true}}}
-{const C3=self.C3;function IsExpressionType(x){return typeof x==="string"||typeof x==="number"}C3.Plugins.LocalStorage.Acts={async SetItem(key,value){this._pendingSets++;try{const valueSet=await this._storage.setItem(key,value);await this.ScheduleTriggers(async()=>{this._currentKey=key;this._lastValue=valueSet;await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAnyItemSet);await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemSet)})}catch(err){await this._TriggerStorageError(err)}finally{this._pendingSets--;
-if(this._pendingSets===0)await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAllSetsComplete)}},async SetBinaryItem(key,objectClass){if(!objectClass)return;const inst=objectClass.GetFirstPicked(this._inst);if(!inst)return;const sdkInst=inst.GetSdkInstance();if(!sdkInst)return;const buffer=sdkInst.GetArrayBufferReadOnly();this._pendingSets++;try{await this._storage.setItem(key,buffer);await this.ScheduleTriggers(async()=>{this._currentKey=key;this._lastValue="";await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAnyItemSet);
-await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemSet)})}catch(err){await this._TriggerStorageError(err)}finally{this._pendingSets--;if(this._pendingSets===0)await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAllSetsComplete)}},async GetItem(key){this._pendingGets++;try{const value=await this._storage.getItem(key);await this.ScheduleTriggers(async()=>{this._currentKey=key;this._lastValue=IsExpressionType(value)?value:"";await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAnyItemGet);
-await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemGet)})}catch(err){await this._TriggerStorageError(err)}finally{this._pendingGets--;if(this._pendingGets===0)await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAllGetsComplete)}},async GetBinaryItem(key,objectClass){if(!objectClass)return;const inst=objectClass.GetFirstPicked(this._inst);if(!inst)return;const sdkInst=inst.GetSdkInstance();this._pendingGets++;try{let value=await this._storage.getItem(key);value=value instanceof ArrayBuffer?
-value:new ArrayBuffer(0);await this.ScheduleTriggers(async()=>{this._lastValue="";this._currentKey=key;sdkInst.SetArrayBufferTransfer(value);await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAnyItemGet);await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemGet)})}catch(err){await this._TriggerStorageError(err)}finally{this._pendingGets--;if(this._pendingGets===0)await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAllGetsComplete)}},async CheckItemExists(key){try{const value=await this._storage.getItem(key);
-await this.ScheduleTriggers(async()=>{this._currentKey=key;if(typeof value==="undefined"||value===null){this._lastValue="";await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemMissing)}else{this._lastValue=IsExpressionType(value)?value:"";await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemExists)}})}catch(err){await this._TriggerStorageError(err)}},async RemoveItem(key){try{await this._storage.removeItem(key);await this.ScheduleTriggers(async()=>{this._currentKey=key;this._lastValue=
-"";await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAnyItemRemoved);await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnItemRemoved)})}catch(err){await this._TriggerStorageError(err)}},async ClearStorage(){try{await this._storage.clear();await this.ScheduleTriggers(async()=>{this._currentKey="";this._lastValue="";C3.clearArray(this._keyNamesList);await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnCleared)})}catch(err){await this._TriggerStorageError(err)}},async GetAllKeyNames(){try{const keyList=
-await this._storage.keys();await this.ScheduleTriggers(async()=>{this._keyNamesList=keyList;await this.TriggerAsync(C3.Plugins.LocalStorage.Cnds.OnAllKeyNamesLoaded)})}catch(err){await this._TriggerStorageError(err)}}}}{const C3=self.C3;C3.Plugins.LocalStorage.Exps={ItemValue(){return this._lastValue},Key(){return this._currentKey},KeyCount(){return this._keyNamesList.length},KeyAt(i){i=Math.floor(i);if(i<0||i>=this._keyNamesList.length)return"";return this._keyNamesList[i]},ErrorMessage(){return this._errorMessage}}};
-
-}
-
-{
 'use strict';{const C3=self.C3;C3.Behaviors.Tween=class TweenBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.Tween.Type=class TweenType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
 {const C3=self.C3;const NAMESPACE=C3.Behaviors.Tween;const ENABLED=0;NAMESPACE.Instance=class TweenInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._allowMultiple=false;this._enabled=true;if(properties){this._allowMultiple=false;this._enabled=!!properties[ENABLED]}this._activeTweens=new Map;this._disabledTweens=[];this._waitingForReleaseTweens=new Map;this._finishingTween=null;this._activeTweensJson=null;this._disabledTweensJson=null;this._waitingForReleaseTweensJson=
 null;this._finishingTweenName="";if(this._enabled)this._StartTicking2();this._afterLoad=e=>this._OnAfterLoad(e);this.GetRuntime().Dispatcher().addEventListener("afterload",this._afterLoad)}Release(){this.GetRuntime().Dispatcher().removeEventListener("afterload",this._afterLoad);this._afterLoad=null;if(this._finishingTween){this.ReleaseAndCompleteTween(this._finishingTween);this._finishingTween=null}this.ReleaseAndCompleteTweens();this._tweens=null;this.ClearDisabledList();this._disabledTweens=null;
@@ -4017,7 +3999,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Arr,
 		C3.Plugins.Mouse,
 		C3.Plugins.NinePatch,
-		C3.Plugins.LocalStorage,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.System.Acts.SetVar,
 		C3.Behaviors.Pin.Acts.PinByProperties,
@@ -4072,9 +4053,9 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Acts.SetBoolVar,
 		C3.Plugins.TiledBg.Exps.Y,
 		C3.Plugins.System.Acts.GoToLayout,
-		C3.Plugins.Arr.Acts.SetSize,
 		C3.Plugins.Sprite.Acts.SetSize,
 		C3.Plugins.AJAX.Acts.RequestFile,
+		C3.Plugins.Arr.Acts.SetSize,
 		C3.Plugins.AJAX.Cnds.OnComplete,
 		C3.Plugins.Json.Acts.Parse,
 		C3.Plugins.AJAX.Exps.LastData,
@@ -4143,7 +4124,6 @@ self.C3_JsPropNameTable = [
 	{buttomHome: 0},
 	{Sine2: 0},
 	{jet: 0},
-	{LocalStorage: 0},
 	{answered: 0},
 	{questionNumber: 0},
 	{question: 0},
@@ -4159,9 +4139,6 @@ self.C3_JsPropNameTable = [
 	{bulletUID: 0},
 	{alienUID: 0},
 	{vNum: 0},
-	{task_id: 0},
-	{subject_id: 0},
-	{id_token: 0},
 	{question_count: 0},
 	{control: 0},
 	{highscore: 0},
@@ -4383,9 +4360,7 @@ self.C3_ExpressionFuncs = [
 		() => "send-data",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
-			const v1 = p._GetNode(1).GetVar();
-			const v2 = p._GetNode(2).GetVar();
-			return () => ((((("/games/alienshooter/result?task_id=" + v0.GetValue()) + "&subject_id=") + v1.GetValue()) + "&id_token=") + v2.GetValue());
+			return () => and("/result?higscore=", v0.GetValue());
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
