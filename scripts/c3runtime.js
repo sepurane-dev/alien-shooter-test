@@ -4068,6 +4068,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetVisible,
 		C3.Plugins.Mouse.Cnds.OnObjectClicked,
 		C3.Plugins.System.Acts.SetLayerVisible,
+		C3.Plugins.AJAX.Acts.SetHeader,
 		C3.Plugins.AJAX.Acts.Post,
 		C3.Plugins.System.Exps.urlencode
 	];
@@ -4357,6 +4358,8 @@ self.C3_ExpressionFuncs = [
 		() => "MOBILE",
 		() => "DESKTOP",
 		() => -240,
+		() => "Content-Type",
+		() => "application/json",
 		() => "send-data",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
