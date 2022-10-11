@@ -4360,7 +4360,7 @@ self.C3_ExpressionFuncs = [
 		() => "send-data",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
-			return () => and("/result?higscore=", v0.GetValue());
+			return () => and("/result?highscore=", v0.GetValue());
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
